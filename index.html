@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>متجري</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" type="image/png">
   <style>
     body {
       font-family: 'Tahoma', sans-serif;
@@ -53,6 +54,12 @@
     .price {
       color: green;
       font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .quantity {
+      color: #555;
+      font-size: 14px;
       margin-bottom: 10px;
     }
 
@@ -109,8 +116,8 @@
   <div class="overlay" onclick="hidePopup()"></div>
   <div class="popup" id="popup">
     <p>اختر طريقة التواصل:</p>
-    <a href="https://wa.me/96487830602414" target="_blank">واتساب</a>
-    <a href="https://t.me/y_78b" class="telegram" target="_blank">تليجرام</a>
+    <a href="https://wa.me/966XXXXXXXXX" target="_blank">واتساب</a>
+    <a href="https://t.me/username" class="telegram" target="_blank">تليجرام</a>
   </div>
 
   <script>
@@ -133,7 +140,8 @@
       div.innerHTML = `
         <img src="${product.image}" alt="صورة المنتج" />
         <div class="product-name">${product.name}</div>
-        <div class="price">${product.price} $</div>
+        <div class="price">${product.price} ريال</div>
+        <div class="quantity">الكمية المتوفرة: ${product.quantity}</div>
         <button class="buy-btn" onclick="showPopup()">اشترِ الآن</button>
       `;
       productList.appendChild(div);
