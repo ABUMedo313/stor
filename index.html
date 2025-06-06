@@ -1,189 +1,235 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>متجر الأحلام</title>
-<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3081/3081559.png">
-<style>
-:root {
-  --bg-dark:#181818;--text-dark:#eee;--card-dark:#222;
-  --bg-light:#f4f4f4;--text-light:#222;--card-light:#fff;
-}
-body[data-theme="dark"]{background:var(--bg-dark);color:var(--text-dark);}
-body[data-theme="light"]{background:var(--bg-light);color:var(--text-light);}
-.header{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;background:#111;position:sticky;top:0;z-index:1000;}
-.logo-title{display:flex;align-items:center;gap:10px;}
-.logo-title img{width:40px;height:40px;border-radius:50%;object-fit:cover;}
-.header h1{margin:0;font-size:24px;color:white;}
-.header span{font-size:24px;cursor:pointer;color:white;margin-left:15px;}
-.settings-panel{position:fixed;top:70px;right:20px;background:#333;color:#eee;padding:20px;border-radius:8px;display:none;z-index:200;}
-.settings-panel select, .settings-panel button{width:100%;margin:8px 0;padding:8px;border-radius:5px;border:1px solid #444;background:#444;color:#eee;}
-.products{display:flex;flex-wrap:wrap;justify-content:center;padding:20px;gap:20px;}
-.product{background:var(--card-dark);border-radius:12px;padding:15px;width:260px;box-shadow:0 4px 8px rgba(0,0,0,0.4);text-align:center;}
-.product img{width:100%;height:180px;object-fit:cover;border-radius:8px;}
-.product-name{margin:10px 0;font-size:18px;font-weight:bold;}
-.price{color:#4caf50;margin-bottom:6px;font-size:16px;}
-.quantity{font-size:14px;color:#ccc;margin-bottom:12px;}
-.add-btn{background:linear-gradient(45deg,#1e3c72,#2a5298);color:#fff;border:none;padding:10px 20px;border-radius:20px;cursor:pointer;font-weight:bold;transition:0.3s;}
-.add-btn:hover{opacity:0.9;}
-.overlay,.popup,.cart-panel{position:fixed;display:none;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:100;}
-.popup,.cart-content{background:#333;color:#eee;padding:30px;border-radius:8px;text-align:center;max-width:90%;width:350px;}
-.link-buttons{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;}
-.popup a,.cart-content a{display:inline-block;padding:12px 20px;border-radius:8px;background:#25D366;color:white;text-decoration:none;font-weight:bold;min-width:120px;text-align:center;}
-.popup a.telegram,.cart-content a.telegram{background:#0088cc;}
-.cart-item{background:#444;padding:10px;margin:8px 0;border-radius:6px;text-align:left;}
-.cart-item button{float:right;background:#c00;border:none;color:white;border-radius:4px;padding:4px 8px;cursor:pointer;}
-.close-btn{margin-top:15px;padding:8px 16px;background:#555;border:none;border-radius:4px;color:#eee;cursor:pointer;}
-</style>
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>متجر الأحلام</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3081/3081559.png">
+  <style>
+    :root {
+      --bg-dark:#181818; --text-dark:#eee;
+      --bg-light:#f4f4f4; --text-light:#222;
+      --card-dark:#222;
+    }
+    body[data-theme="dark"] { background: var(--bg-dark); color: var(--text-dark); }
+    body[data-theme="light"] { background: var(--bg-light); color: var(--text-light); }
+    body, input, select, textarea, button { font-family: 'Segoe UI', sans-serif; }
+    .header{ display: flex; align-items: center; justify-content: space-between; padding:15px; background:#111; position:sticky; top:0; z-index:1000; }
+    .logo-title{ display:flex; align-items:center; gap:10px; }
+    .logo-title img{ width:40px; border-radius:50%; }
+    .header h1{ margin:0; color:white; font-size:20px; }
+    .header .icons span{ font-size:24px; cursor:pointer; color:white; margin-left:12px; }
+    .settings-panel{ position:absolute; top:60px; right:20px; background:#333; padding:15px; border-radius:8px; display:none; z-index:200; }
+    .settings-panel select, .settings-panel button{ width:100%; margin:8px 0; padding:8px; border-radius:6px; border:1px solid #555; background:#444; color:#eee; cursor:pointer; }
+    .products{ display:flex; flex-wrap:wrap; justify-content:center; padding:20px; gap:20px; }
+    .product{ background: var(--card-dark); padding:15px; border-radius:12px; width:240px; text-align:center; }
+    .product img{ width:100%; height:150px; object-fit:cover; border-radius:8px; }
+    .btn{ background:linear-gradient(45deg,#1e3c72,#2a5298); border:none; color:white; padding:10px 20px; border-radius:20px; cursor:pointer; margin-top:8px; }
+    .overlay, .popup, .cart-panel, .order-panel{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:100; }
+    .popup, .cart-content, .order-panel{ background:#333; padding:20px; border-radius:8px; width:90%; max-width:380px; color:#eee; }
+    .link-buttons{ display:flex; justify-content:center; gap:10px; margin:12px 0; }
+    .link-buttons a{ flex:1; text-align:center; background:#25D366; color:white; padding:10px; border-radius:6px; text-decoration:none; font-weight:bold; }
+    .link-buttons a.telegram{ background:#0088cc; }
+    .cart-content h3, .order-panel h3{ margin-top:0; }
+    .cart-item{ background:#444; padding:8px; margin:6px 0; border-radius:6px; display:flex; justify-content:space-between; align-items:center; }
+    .cart-item small{ color:#ccc; }
+    .cart-item button{ background:#c00; border:none; color:white; padding:4px 8px; border-radius:4px; cursor:pointer; }
+    .order-panel label{ display:block; margin-top:10px; }
+    .order-panel input, .order-panel textarea{ width:100%; padding:8px; border:1px solid #555; border-radius:6px; background:#222; color:#eee; margin-top:4px; }
+  </style>
 </head>
 <body data-theme="dark">
 
-<div class="header">
-  <div class="logo-title">
-    <img id="storeLogo" src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="Logo">
-    <h1 id="storeTitle">متجر الأحلام</h1>
-  </div>
-  <div>
-    <span class="cart-icon" onclick="openCart()">🛒 (<span id="cartCount">0</span>)</span>
-    <span class="menu-icon" onclick="toggleSettings()">☰</span>
-  </div>
-</div>
-
-<div class="settings-panel" id="settingsPanel">
-  <select id="themeSelect" onchange="setTheme()">
-    <option value="dark">ثيم داكن</option>
-    <option value="light">ثيم فاتح</option>
-  </select>
-  <select id="langSelect" onchange="setLang()">
-    <option value="ar">العربي</option>
-    <option value="en">English</option>
-    <option value="ku">Kurdî</option>
-  </select>
-  <button onclick="contactCart()">تواصل (السلة)</button>
-</div>
-
-<div class="products" id="productList"></div>
-
-<div class="overlay" id="overlay" onclick="closeAll()"></div>
-
-<div class="popup" id="popup">
-  <p id="popupMsg">اختر طريقة التواصل معنا:</p>
-  <div class="link-buttons">
-    <a id="waLink" href="#" target="_blank">واتساب 📱</a>
-    <a id="tgLink" class="telegram" href="#" target="_blank">تليجرام 💬</a>
-  </div>
-  <button class="close-btn" onclick="closeAll()">إغلاق</button>
-</div>
-
-<div class="cart-panel" id="cartPanel">
-  <div class="cart-content">
-    <h3>🛒 سلة مشترياتك</h3>
-    <div id="cartItems"></div>
-    <div class="link-buttons">
-      <a id="waLinkCart" href="#" target="_blank">واتساب</a>
-      <a id="tgLinkCart" class="telegram" href="#" target="_blank">تليجرام</a>
+  <div class="header">
+    <div class="logo-title">
+      <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="Logo">
+      <h1>متجر الأحلام</h1>
     </div>
-    <button class="close-btn" onclick="closeAll()">إغلاق</button>
+    <div class="icons">
+      <span onclick="openCart()">🛒 (<span id="cartCount">0</span>)</span>
+      <span onclick="toggleSettings()">☰</span>
+    </div>
   </div>
-</div>
 
-<script>
-const products = JSON.parse(localStorage.getItem('products'))||[];
-let cart = JSON.parse(localStorage.getItem('cart'))||[];
-let currency = localStorage.getItem('currency')||'$';
-let theme = localStorage.getItem('theme')||'dark';
-let lang = localStorage.getItem('lang')||'ar';
-const waLinkAdmin = localStorage.getItem('whatsappLink')||'wa.me/966XXXXXXXXX';
-const tgLinkAdmin = localStorage.getItem('telegramLink')||'t.me/username';
+  <div class="settings-panel" id="settingsPanel">
+    <select id="themeSelect" onchange="setTheme()">
+      <option value="dark">ثيم داكن</option>
+      <option value="light">ثيم فاتح</option>
+    </select>
+    <select id="langSelect" onchange="setLang()">
+      <option value="ar">العربية</option>
+      <option value="en">English</option>
+      <option value="ku">Kurdî</option>
+    </select>
+    <button onclick="support()">الدعم الفني</button>
+  </div>
 
-document.body.setAttribute('data-theme', theme);
-document.getElementById('themeSelect').value=theme;
-document.getElementById('langSelect').value=lang;
+  <div class="products" id="productList"></div>
 
-const texts = {
-  ar: {qty:"الكمية", add:"أضف إلى السلة", cart:"سلة مشترياتك", empty:"السلة فارغة.", contactCart:"تواصل (السلة)", close:"إغلاق", choose:"اختر طريقة التواصل معنا:"},
-  en: {qty:"Quantity", add:"Add to Cart", cart:"Your Cart", empty:"Cart is empty.", contactCart:"Contact (Cart)", close:"Close", choose:"Choose contact method:"},
-  ku: {qty:"بڕ", add:"زیادکردن بە سەلە", cart:"کۆمەڵە باڵەوە", empty:"سەلە بەتاڵە.", contactCart:"پەیوەندی (سەلە)", close:"داخەوە", choose:"ڕێکبەندی پەیوەندیدان:"},
-};
+  <div class="overlay" id="overlay" onclick="closeAll()"></div>
 
-function toggleSettings(){let p=document.getElementById('settingsPanel');p.style.display=p.style.display==='block'?'none':'block';}
-function setTheme(){theme=document.getElementById('themeSelect').value;localStorage.setItem('theme',theme);document.body.setAttribute('data-theme',theme);}
-function setLang(){lang=document.getElementById('langSelect').value;localStorage.setItem('lang',lang);updateTexts();renderProducts();}
-function updateTexts(){
-  const t=texts[lang];
-  document.getElementById('popupMsg').textContent=t.choose;
-  document.querySelector('.settings-panel button').textContent=t.contactCart;
-  document.querySelector('#cartPanel h3').textContent=`🛒 ${t.cart}`;
-}
+  <div class="popup" id="supportPopup">
+    <h3>الدعم الفني</h3>
+    <div class="link-buttons">
+      <a href="#" id="waSupport">واتساب</a>
+      <a href="#" id="tgSupport" class="telegram">تليجرام</a>
+    </div>
+    <button class="btn" onclick="closeAll()">إغلاق</button>
+  </div>
 
-function renderProducts(){
-  const t=texts[lang];
-  document.getElementById('productList').innerHTML = products.map((p,i)=>
-    `<div class="product">
-      <img src="${p.image}" alt="${p.name}">
-      <div class="product-name">${p.name}</div>
-      <div class="price">${p.price} ${currency}</div>
-      <div class="quantity">${t.qty}: ${p.quantity}</div>
-      <button class="add-btn" onclick="addToCart(${i})">${t.add}</button>
-    </div>`).join('');
-  document.getElementById('cartCount').textContent=cart.length;
-}
+  <div class="cart-panel" id="cartPanel">
+    <div class="cart-content">
+      <h3>سلة مشترياتك</h3>
+      <div id="cartItems"></div>
+      <button class="btn" onclick="openOrder()">إتمام الطلب</button>
+      <button class="btn" onclick="contactCart()">تواصل مباشر</button>
+      <button class="btn close-btn" onclick="closeAll()">إغلاق</button>
+    </div>
+  </div>
 
-function addToCart(i){
-  cart.push(products[i]);
-  localStorage.setItem('cart',JSON.stringify(cart));
-  document.getElementById('cartCount').textContent = cart.length;
-}
+  <div class="order-panel" id="orderPanel">
+    <h3>نموذج طلب</h3>
+    <form id="orderForm" onsubmit="submitOrder(event)">
+      <label>اسمك:</label><input type="text" id="orderName" required>
+      <label>بريد إلكتروني (اختياري):</label><input type="email" id="orderEmail">
+      <label>رقم الهاتف:</label><input type="tel" id="orderPhone" required>
+      <label>الدولة:</label><input type="text" id="orderCountry" required>
+      <label>المدينة:</label><input type="text" id="orderCity" required>
+      <label>العنوان:</label><input type="text" id="orderAddress" required>
+      <label>ملاحظات (اختياري):</label><textarea id="orderNotes"></textarea>
+      <button class="btn" type="submit">إرسال الطلب</button>
+      <button class="btn close-btn" type="button" onclick="closeAll()">إلغاء</button>
+    </form>
+  </div>
 
-function openCart(){
-  renderCart();
-  document.getElementById('overlay').style.display='flex';
-  document.getElementById('cartPanel').style.display='flex';
-}
+  <script>
+    // البيانات الأساسية
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let theme = localStorage.getItem('theme') || 'dark';
+    let lang = localStorage.getItem('lang') || 'ar';
+    const waSupport = localStorage.getItem('whatsappLink') || 'wa.me/966XXXXXXXXX';
+    const tgSupport = localStorage.getItem('telegramLink') || 't.me/username';
 
-function renderCart(){
-  const t=texts[lang];
-  if(cart.length===0) document.getElementById('cartItems').innerHTML = `<p>${t.empty}</p>`;
-  else document.getElementById('cartItems').innerHTML = cart.map((p,i)=>
-    `<div class="cart-item">
-      ${p.name} • ${p.price} ${currency}<br><small>${t.qty}: ${p.quantity}</small>
-      <button onclick="removeFromCart(${i})">✖️</button>
-    </div>`).join('');
-  const msg = cart.map(p=>`${p.name} (${p.quantity}) - ${p.price} ${currency}`).join('%0A');
-  document.getElementById('waLinkCart').href=`https://${waLinkAdmin}?text=${encodeURIComponent(msg)}`;
-  document.getElementById('tgLinkCart').href=`https://${tgLinkAdmin}`;
-}
+    document.body.setAttribute('data-theme', theme);
+    document.getElementById('themeSelect').value = theme;
+    document.getElementById('langSelect').value = lang;
 
-function removeFromCart(i){
-  cart.splice(i,1);
-  localStorage.setItem('cart',JSON.stringify(cart));
-  renderCart();
-  document.getElementById('cartCount').textContent = cart.length;
-}
+    const texts = {
+      ar: {qty:"الكمية", add:"أضف للسلة", cart:"سلة مشترياتك", empty:"السلة فارغة", order:"إتمام الطلب", contact:"تواصل مباشر", close:"إغلاق", support:"الدعم الفني"},
+      en: {qty:"Qty", add:"Add to Cart", cart:"Your Cart", empty:"Cart is empty", order:"Place Order", contact:"Contact", close:"Close", support:"Support"},
+      ku: {qty:"بڕ", add:"زیادکردن", cart:"کۆمەڵە باڵەوە", empty:"سەلە بەتاڵە", order:"نووسینی داواکاری", contact:"پەیوەندی", close:"داخەوە", support:"یارمەتی"},
+    };
 
-function contactCart(){
-  renderCart();
-  togglePopup();
-}
+    function toggleSettings() {
+      document.getElementById('settingsPanel').style.display =
+        document.getElementById('settingsPanel').style.display==='block'?'none':'block';
+    }
 
-function togglePopup(){
-  const o= document.getElementById('overlay'),
-        p= document.getElementById('popup');
-  o.style.display=o.style.display==='flex'?'none':'flex';
-  p.style.display=p.style.display==='flex'?'none':'flex';
-  const msg=cart.map(p=>`${p.name} (${p.quantity}) - ${p.price} ${currency}`).join('%0A');
-  document.getElementById('waLink').href=`https://${waLinkAdmin}?text=${encodeURIComponent(msg)}`;
-  document.getElementById('tgLink').href=`https://${tgLinkAdmin}`;
-}
+    function setTheme() {
+      theme = document.getElementById('themeSelect').value;
+      localStorage.setItem('theme', theme);
+      document.body.setAttribute('data-theme', theme);
+    }
 
-function closeAll(){
-  document.getElementById('overlay').style.display='none';
-  document.getElementById('popup').style.display='none';
-  document.getElementById('cartPanel').style.display='none';
-  document.getElementById('settingsPanel').style.display='none';
-}
+    function setLang() {
+      lang = document.getElementById('langSelect').value;
+      localStorage.setItem('lang', lang);
+      renderProducts(); openCart(); updateSupport();
+    }
 
-updateTexts();
-renderProducts();
-</script>
+    function support() {
+      document.getElementById('overlay').style.display = 'flex';
+      document.getElementById('supportPopup').style.display = 'flex';
+      document.getElementById('waSupport').href = `https://${waSupport}`;
+      document.getElementById('tgSupport').href = `https://${tgSupport}`;
+    }
+
+    function renderProducts() {
+      const cur = localStorage.getItem('currency') || '$';
+      const t = texts[lang];
+      document.getElementById('productList').innerHTML = products.map((p,i)=>
+        `<div class="product">
+           <img src="${p.image}" alt="${p.name}">
+           <h4>${p.name}</h4>
+           <p>${p.price} ${cur}</p>
+           <button class="btn" onclick="addToCart(${i})">${t.add}</button>
+         </div>`).join('');
+      document.getElementById('cartCount').textContent = cart.length;
+    }
+
+    function addToCart(i) {
+      cart.push(products[i]);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderProducts();
+    }
+
+    function openCart() {
+      renderCart();
+      document.getElementById('overlay').style.display = 'flex';
+      document.getElementById('cartPanel').style.display = 'flex';
+    }
+
+    function renderCart() {
+      const t = texts[lang];
+      const cur = localStorage.getItem('currency') || '$';
+      const list = document.getElementById('cartItems');
+      if (cart.length === 0) {
+        list.innerHTML = `<p>${t.empty}</p>`;
+      } else {
+        list.innerHTML = cart.map((p,i)=>
+          `<div class="cart-item">
+             <span>${p.name} • ${p.price} ${cur}</span>
+             <button onclick="removeFromCart(${i})">✖️</button>
+           </div>`).join('');
+      }
+    }
+
+    function removeFromCart(i) {
+      cart.splice(i,1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderProducts(); renderCart();
+    }
+
+    function contactCart() {
+      const t = texts[lang];
+      const cur = localStorage.getItem('currency') || '$';
+      const msg = cart.map(p=>`${p.name} - ${p.price} ${cur}`).join('%0A');
+      window.open(`https://${waSupport}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function openOrder() {
+      if (cart.length === 0) return alert(texts[lang].empty);
+      document.getElementById('overlay').style.display = 'flex';
+      document.getElementById('orderPanel').style.display = 'flex';
+    }
+
+    function closeAll(e) {
+      if (!e || e.target === document.getElementById('overlay')) {
+        document.getElementById('overlay').style.display =
+        document.getElementById('supportPopup').style.display =
+        document.getElementById('cartPanel').style.display =
+        document.getElementById('orderPanel').style.display = 'none';
+      }
+    }
+
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const order = {
+        name:this.orderName.value, email:this.orderEmail.value, phone:this.orderPhone.value,
+        country:this.orderCountry.value, city:this.orderCity.value, address:this.orderAddress.value,
+        notes:this.orderNotes.value, items:cart, date:new Date().toISOString()
+      };
+      const orders = JSON.parse(localStorage.getItem('orders'))||[];
+      orders.push(order);
+      localStorage.setItem('orders', JSON.stringify(orders));
+      alert('✅ تم إرسال الطلب بنجاح!');
+      this.reset(); cart=[]; localStorage.setItem('cart', JSON.stringify(cart));
+      closeAll(); renderProducts();
+    });
+
+    renderProducts();
+    updateSupport = support; // to update after language change
+  </script>
 
 </body>
 </html>
