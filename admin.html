@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>لوحة رفع وتعديل المنتجات</title>
+  <title>لوحة إدارة المنتجات</title>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" type="image/png">
   <style>
     body {
@@ -15,7 +15,7 @@
       color: #333;
     }
 
-    form {
+    form, .login-box {
       background-color: #fff;
       padding: 20px;
       border-radius: 10px;
@@ -24,7 +24,7 @@
       margin-bottom: 20px;
     }
 
-    input, textarea {
+    input {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
@@ -40,10 +40,6 @@
       border-radius: 5px;
       cursor: pointer;
       margin-top: 10px;
-    }
-
-    .preview {
-      margin-top: 30px;
     }
 
     .product-item {
@@ -80,37 +76,75 @@
     .clear-btn {
       background-color: #000;
     }
+
+    .hidden {
+      display: none;
+    }
+
+    .error {
+      color: red;
+    }
   </style>
 </head>
 <body>
 
-  <h2>📦 لوحة إدارة المنتجات</h2>
+  <!-- صندوق تسجيل الدخول -->
+  <div id="loginBox" class="login-box">
+    <h2>🔐 تسجيل الدخول</h2>
+    <input type="email" id="email" placeholder="الإيميل">
+    <input type="password" id="password" placeholder="كلمة المرور">
+    <button onclick="login()">تسجيل الدخول</button>
+    <p id="loginError" class="error"></p>
+  </div>
 
-  <form id="productForm">
-    <input type="hidden" id="editIndex" value="-1">
-    
-    <label>اسم المنتج:</label>
-    <input type="text" id="name" required>
+  <!-- لوحة الإدارة (مخفية بالبداية) -->
+  <div id="adminPanel" class="hidden">
 
-    <label>السعر:</label>
-    <input type="text" id="price" required>
+    <h2>📦 لوحة إدارة المنتجات</h2>
 
-    <label>الكمية المتوفرة:</label>
-    <input type="number" id="quantity" required>
+    <form id="productForm">
+      <input type="hidden" id="editIndex" value="-1">
+      
+      <label>اسم المنتج:</label>
+      <input type="text" id="name" required>
 
-    <label>رابط صورة المنتج:</label>
-    <input type="url" id="image" required>
+      <label>السعر:</label>
+      <input type="text" id="price" required>
 
-    <button type="submit">🚀 حفظ المنتج</button>
-  </form>
+      <label>الكمية المتوفرة:</label>
+      <input type="number" id="quantity" required>
 
-  <button onclick="clearAllProducts()" class="clear-btn">🗑️ حذف جميع المنتجات</button>
+      <label>رابط صورة المنتج:</label>
+      <input type="url" id="image" required>
 
-  <div class="preview" id="preview">
-    <h3>📋 المنتجات الحالية:</h3>
+      <button type="submit">🚀 حفظ المنتج</button>
+    </form>
+
+    <button onclick="clearAllProducts()" class="clear-btn">🗑️ حذف جميع المنتجات</button>
+
+    <div class="preview" id="preview">
+      <h3>📋 المنتجات الحالية:</h3>
+    </div>
   </div>
 
   <script>
+    const correctEmail = "mugtaba313mugtaba@gmail.com";
+    const correctPassword = "mugtaba313medo313";
+
+    function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorBox = document.getElementById('loginError');
+
+      if (email === correctEmail && password === correctPassword) {
+        document.getElementById('loginBox').style.display = 'none';
+        document.getElementById('adminPanel').classList.remove('hidden');
+        renderProducts();
+      } else {
+        errorBox.textContent = "❌ الإيميل أو كلمة المرور غير صحيحة!";
+      }
+    }
+
     const form = document.getElementById('productForm');
     const preview = document.getElementById('preview');
 
@@ -181,8 +215,6 @@
         renderProducts();
       }
     }
-
-    renderProducts();
   </script>
 
 </body>
