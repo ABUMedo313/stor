@@ -15,7 +15,7 @@
       color: #333;
     }
 
-    form, .login-box {
+    form, .login-box, .currency-box {
       background-color: #fff;
       padding: 20px;
       border-radius: 10px;
@@ -24,7 +24,7 @@
       margin-bottom: 20px;
     }
 
-    input {
+    input, select {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
@@ -84,11 +84,17 @@
     .error {
       color: red;
     }
+
+    .currency-box {
+      max-width: 300px;
+      margin-bottom: 30px;
+      float: left;
+    }
   </style>
 </head>
 <body>
 
-  <!-- صندوق تسجيل الدخول -->
+  <!-- تسجيل الدخول -->
   <div id="loginBox" class="login-box">
     <h2>🔐 تسجيل الدخول</h2>
     <input type="email" id="email" placeholder="الإيميل">
@@ -97,14 +103,24 @@
     <p id="loginError" class="error"></p>
   </div>
 
-  <!-- لوحة الإدارة (مخفية بالبداية) -->
+  <!-- لوحة التحكم -->
   <div id="adminPanel" class="hidden">
 
-    <h2>📦 لوحة إدارة المنتجات</h2>
+    <!-- اختيار العملة -->
+    <div class="currency-box">
+      <label for="currencySelect">💱 اختر العملة:</label>
+      <select id="currencySelect" onchange="changeCurrency()">
+        <option value="ريال">ريال</option>
+        <option value="$">$ دولار</option>
+        <option value="€">€ يورو</option>
+      </select>
+    </div>
+
+    <h2 style="clear: both;">📦 لوحة إدارة المنتجات</h2>
 
     <form id="productForm">
       <input type="hidden" id="editIndex" value="-1">
-      
+
       <label>اسم المنتج:</label>
       <input type="text" id="name" required>
 
@@ -140,9 +156,21 @@
         document.getElementById('loginBox').style.display = 'none';
         document.getElementById('adminPanel').classList.remove('hidden');
         renderProducts();
+        setCurrencyUI();
       } else {
         errorBox.textContent = "❌ الإيميل أو كلمة المرور غير صحيحة!";
       }
+    }
+
+    function setCurrencyUI() {
+      const currency = localStorage.getItem('currency') || 'ريال';
+      document.getElementById('currencySelect').value = currency;
+    }
+
+    function changeCurrency() {
+      const currency = document.getElementById('currencySelect').value;
+      localStorage.setItem('currency', currency);
+      renderProducts();
     }
 
     const form = document.getElementById('productForm');
@@ -175,12 +203,14 @@
 
     function renderProducts() {
       const products = JSON.parse(localStorage.getItem('products')) || [];
+      const currency = localStorage.getItem('currency') || 'ريال';
+
       const list = products.map((p, index) => `
         <div class="product-item">
           <img src="${p.image}" alt="${p.name}">
           <div class="product-info">
             <strong>${p.name}</strong><br>
-            <small>${p.price} ريال</small><br>
+            <small>${p.price} ${currency}</small><br>
             <small>الكمية: ${p.quantity}</small>
           </div>
           <button class="edit-btn" onclick="editProduct(${index})">✏️ تعديل</button>
