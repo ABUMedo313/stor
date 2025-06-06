@@ -1,33 +1,89 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>متجر الأحلام</title>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" type="image/png">
   <style>
-    body {
-      margin: 0;
-      background-color: #181818;
-      color: #eee;
-      font-family: 'Segoe UI', sans-serif;
+    :root {
+      --bg-dark: #181818; --text-dark: #eee; --card-dark: #222; --btn-dark: #2a5298;
+      --bg-light: #f4f4f4; --text-light: #222; --card-light: #fff; --btn-light: #007bff;
     }
+
+    body[data-theme="dark"] {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    body[data-theme="light"] {
+      background: var(--bg-light);
+      color: var(--text-light);
+    }
+
     .header {
-      background-color: #111;
-      padding: 15px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      padding: 15px 20px;
+      background-color: #111;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
+
+    .header .logo-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header .logo-title img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
     .header h1 {
       margin: 0;
       font-size: 24px;
+      color: white;
     }
-    .menu-icon {
+
+    .header .menu-icon,
+    .header .cart-icon {
       font-size: 24px;
       cursor: pointer;
+      margin-left: 15px;
+      color: white;
     }
+
+    .settings-panel {
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      background: #333;
+      color: #eee;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 200;
+    }
+
+    .settings-panel select,
+    .settings-panel button {
+      width: 100%;
+      margin: 8px 0;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background: #444;
+      color: #eee;
+    }
+
     .products {
       display: flex;
       flex-wrap: wrap;
@@ -35,35 +91,42 @@
       padding: 20px;
       gap: 20px;
     }
+
     .product {
-      background-color: #222;
+      background: #222;
       border-radius: 12px;
       padding: 15px;
       width: 260px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
       text-align: center;
     }
+
     .product img {
       width: 100%;
       height: 180px;
       object-fit: cover;
       border-radius: 8px;
     }
+
     .product-name {
       margin: 10px 0;
       font-size: 18px;
       font-weight: bold;
     }
+
     .price {
       color: #4caf50;
       margin-bottom: 6px;
       font-size: 16px;
     }
+
     .quantity {
-      font-size: 14px; color: #ccc;
+      font-size: 14px;
+      color: #ccc;
       margin-bottom: 12px;
     }
-    .buy-btn {
+
+    .add-btn {
       background: linear-gradient(45deg, #1e3c72, #2a5298);
       color: white;
       border: none;
@@ -73,94 +136,221 @@
       font-weight: bold;
       transition: 0.3s;
     }
-    .buy-btn:hover {
+
+    .add-btn:hover {
       opacity: 0.9;
     }
-    .overlay, .popup {
+
+    .overlay,
+    .popup,
+    .cart-panel {
       position: fixed;
       display: none;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
       justify-content: center;
       align-items: center;
       z-index: 100;
     }
-    .popup {
+
+    .popup,
+    .cart-content {
       background: #333;
       color: #eee;
       padding: 30px;
       border-radius: 8px;
       text-align: center;
-      z-index: 101;
+      max-width: 90%;
+      width: 350px;
     }
-    .popup a {
-      display: block;
-      margin: 10px 0;
-      padding: 12px;
-      border-radius: 6px;
-      background-color: #25D366;
-      color: #fff;
+
+    .popup .link-buttons,
+    .cart-content .link-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .popup a,
+    .cart-content a {
+      display: inline-block;
+      padding: 12px 20px;
+      border-radius: 8px;
+      background: #25D366;
+      color: white;
       text-decoration: none;
+      font-weight: bold;
+      min-width: 120px;
+      text-align: center;
     }
-    .popup a.telegram {
-      background-color: #0088cc;
+
+    .popup a.telegram,
+    .cart-content a.telegram {
+      background: #0088cc;
+    }
+
+    .cart-item {
+      background: #444;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      text-align: left;
+    }
+
+    .close-btn {
+      margin-top: 15px;
+      padding: 8px 16px;
+      background: #555;
+      border: none;
+      border-radius: 4px;
+      color: #eee;
+      cursor: pointer;
     }
   </style>
 </head>
-<body>
+<body data-theme="dark">
 
   <div class="header">
-    <h1>🌟 متجر الأحلام 🌟</h1>
-    <div class="menu-icon" onclick="showPopup('')">📩</div>
+    <div class="logo-title">
+      <img id="storeLogo" src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="Logo">
+      <h1 id="storeTitle">متجر الأحلام</h1>
+    </div>
+    <div>
+      <span class="cart-icon" onclick="openCart()">🛒 (<span id="cartCount">0</span>)</span>
+      <span class="menu-icon" onclick="toggleSettings()">☰</span>
+    </div>
+  </div>
+
+  <div class="settings-panel" id="settingsPanel">
+    <select id="themeSelect" onchange="setTheme()">
+      <option value="dark">ثيم داكن</option>
+      <option value="light">ثيم فاتح</option>
+    </select>
+    <select id="langSelect" onchange="setLang()">
+      <option value="ar">العربي</option>
+      <option value="en">English</option>
+      <option value="ku">Kurdî</option>
+    </select>
+    <button onclick="contactCart()">تواصل (السلة)</button>
   </div>
 
   <div class="products" id="productList"></div>
 
-  <div class="overlay" id="overlay" onclick="hidePopup()"></div>
+  <div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+  <!-- popup التواصل -->
   <div class="popup" id="popup">
-    <p>اختر طريقة التواصل معنا:</p>
-    <a id="whatsappBtn" href="#" target="_blank">واتساب 📱</a>
-    <a id="tgBtn" class="telegram" href="#" target="_blank">تليجرام 💬</a>
-    <button onclick="hidePopup()" style="padding:10px 20px; margin-top:15px;">إلغاء</button>
+    <p id="popupMsg">اختر طريقة التواصل معنا:</p>
+    <div class="link-buttons">
+      <a id="waLink" href="#" target="_blank">واتساب 📱</a>
+      <a id="tgLink" class="telegram" href="#" target="_blank">تليجرام 💬</a>
+    </div>
+    <button class="close-btn" onclick="closeAll()">إغلاق</button>
+  </div>
+
+  <!-- سلة الشراء -->
+  <div class="cart-panel" id="cartPanel">
+    <div class="cart-content">
+      <h3>🛒 سلة مشترياتك</h3>
+      <div id="cartItems"></div>
+      <div class="link-buttons">
+        <a id="waLinkCart" href="#" target="_blank">واتساب</a>
+        <a id="tgLinkCart" class="telegram" href="#" target="_blank">تليجرام</a>
+      </div>
+      <button class="close-btn" onclick="closeAll()">إغلاق</button>
+    </div>
   </div>
 
   <script>
-    const currency = localStorage.getItem('currency') || '$';
     const products = JSON.parse(localStorage.getItem('products')) || [];
-    const productList = document.getElementById('productList');
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let currency = localStorage.getItem('currency') || '$';
+    let theme = localStorage.getItem('theme') || 'dark';
+    let lang = localStorage.getItem('lang') || 'ar';
 
-    // روابط التواصل من localStorage
-    const whatsappLink = localStorage.getItem('whatsappLink') || 'wa.me/966XXXXXXXXX';
-    const telegramLink = localStorage.getItem('telegramLink') || 't.me/username';
+    const waLinkAdmin = localStorage.getItem('whatsappLink') || 'wa.me/966XXXXXXXXX';
+    const tgLinkAdmin = localStorage.getItem('telegramLink') || 't.me/username';
 
-    products.forEach(product => {
-      const card = document.createElement('div');
-      card.className = 'product';
-      card.innerHTML = `
-        <img src="${product.image}" alt="${product.name}">
-        <div class="product-name">${product.name}</div>
-        <div class="price">${product.price} ${currency}</div>
-        <div class="quantity">الكمية: ${product.quantity}</div>
-        <button class="buy-btn" onclick="showPopup('${product.name}')">اشترِ الآن</button>
-      `;
-      productList.appendChild(card);
-    });
+    document.body.setAttribute('data-theme', theme);
+    document.getElementById('themeSelect').value = theme;
+    document.getElementById('langSelect').value = lang;
 
-    function showPopup(productName = '') {
-      const fullWhatsAppLink = `https://${whatsappLink}?text=${encodeURIComponent('طلب المنتج: ' + productName)}`;
-      const fullTelegramLink = `https://${telegramLink}`;
-      document.getElementById('whatsappBtn').href = fullWhatsAppLink;
-      document.getElementById('tgBtn').href = fullTelegramLink;
-      document.getElementById('overlay').style.display = 'flex';
-      document.getElementById('popup').style.display = 'block';
+    function toggleSettings() {
+      const panel = document.getElementById('settingsPanel');
+      panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
     }
 
-    function hidePopup() {
+    function setTheme() {
+      theme = document.getElementById('themeSelect').value;
+      localStorage.setItem('theme', theme);
+      document.body.setAttribute('data-theme', theme);
+    }
+
+    function setLang() {
+      lang = document.getElementById('langSelect').value;
+      localStorage.setItem('lang', lang);
+    }
+
+    function renderProducts() {
+      document.getElementById('productList').innerHTML = products.map((p, i) =>
+        `<div class="product">
+          <img src="${p.image}" alt="${p.name}">
+          <div class="product-name">${p.name}</div>
+          <div class="price">${p.price} ${currency}</div>
+          <div class="quantity">الكمية: ${p.quantity}</div>
+          <button class="add-btn" onclick="addToCart(${i})">أضف إلى السلة</button>
+        </div>`
+      ).join('');
+      document.getElementById('cartCount').textContent = cart.length;
+    }
+
+    function addToCart(i) {
+      cart.push(products[i]);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      document.getElementById('cartCount').textContent = cart.length;
+    }
+
+    function openCart() {
+      renderCart();
+      document.getElementById('overlay').style.display = 'flex';
+      document.getElementById('cartPanel').style.display = 'flex';
+    }
+
+    function renderCart() {
+      let html = cart.map((p, i) => `
+        <div class="cart-item">
+          ${p.name} • ${p.price} ${currency}<br>
+          <small>الكمية: ${p.quantity}</small>
+        </div>`).join('');
+      document.getElementById('cartItems').innerHTML = html || '<p>السلة فارغة.</p>';
+
+      let msg = cart.map(p => `${p.name} (${p.quantity}) - ${p.price} ${currency}`).join('%0A');
+      document.getElementById('waLinkCart').href = `https://${waLinkAdmin}?text=${encodeURIComponent(msg)}`;
+      document.getElementById('tgLinkCart').href = `https://${tgLinkAdmin}`;
+    }
+
+    function contactCart() {
+      renderCart();
+      document.getElementById('overlay').style.display = 'flex';
+      document.getElementById('popup').style.display = 'flex';
+
+      let msg = cart.map(p => `${p.name} (${p.quantity}) - ${p.price} ${currency}`).join('%0A');
+      document.getElementById('waLink').href = `https://${waLinkAdmin}?text=${encodeURIComponent(msg)}`;
+      document.getElementById('tgLink').href = `https://${tgLinkAdmin}`;
+    }
+
+    function closeAll() {
       document.getElementById('overlay').style.display = 'none';
       document.getElementById('popup').style.display = 'none';
+      document.getElementById('cartPanel').style.display = 'none';
+      document.getElementById('settingsPanel').style.display = 'none';
     }
-  </script>
 
+    renderProducts();
+  </script>
 </body>
 </html>
