@@ -2,55 +2,81 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>لوحة إدارة المنتجات</title>
+  <title>لوحة إدارة المتجر</title>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" type="image/png">
   <style>
     body {
-      font-family: 'Tahoma', sans-serif;
-      background-color: #f2f2f2;
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #eee;
+      margin: 0;
       padding: 30px;
     }
 
-    h2 {
-      color: #333;
+    .hidden { display: none; }
+
+    .box {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      max-width: 600px;
+      margin: auto;
+      margin-bottom: 25px;
     }
 
-    form, .login-box, .currency-box {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-width: 500px;
-      margin-bottom: 20px;
+    h2 {
+      margin-top: 0;
+      color: #fff;
+      text-align: center;
     }
 
     input, select {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      border: 1px solid #444;
+      border-radius: 8px;
+      background: #2a2a2a;
+      color: #fff;
+      font-size: 16px;
     }
 
-    button {
-      background-color: #28a745;
+    .btn {
+      display: inline-block;
+      background: linear-gradient(45deg, #1e3c72, #2a5298);
       color: white;
-      padding: 12px;
+      padding: 12px 20px;
+      font-size: 16px;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: 0.3s;
       margin-top: 10px;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-danger {
+      background: linear-gradient(45deg, #8e0e00, #1f1c18);
+    }
+
+    .btn-warning {
+      background: linear-gradient(45deg, #ffb347, #ffcc33);
+      color: #111;
     }
 
     .product-item {
-      background: #fff;
-      border-radius: 8px;
+      background: #262626;
       padding: 15px;
-      margin-top: 10px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      border: 1px solid #333;
+      border-radius: 10px;
+      margin-top: 15px;
       display: flex;
+      gap: 15px;
       align-items: center;
-      gap: 10px;
     }
 
     .product-item img {
@@ -64,82 +90,56 @@
       flex: 1;
     }
 
-    .delete-btn {
-      background-color: #dc3545;
-    }
-
-    .edit-btn {
-      background-color: #ffc107;
-      color: black;
-    }
-
-    .clear-btn {
-      background-color: #000;
-    }
-
-    .hidden {
-      display: none;
-    }
-
     .error {
-      color: red;
+      color: #ff6b6b;
+      text-align: center;
+      margin-top: 10px;
     }
 
-    .currency-box {
-      max-width: 300px;
-      margin-bottom: 30px;
-      float: left;
+    .center {
+      text-align: center;
+    }
+
+    label {
+      color: #bbb;
     }
   </style>
 </head>
 <body>
 
   <!-- تسجيل الدخول -->
-  <div id="loginBox" class="login-box">
+  <div class="box" id="loginBox">
     <h2>🔐 تسجيل الدخول</h2>
-    <input type="email" id="email" placeholder="الإيميل">
+    <input type="email" id="email" placeholder="البريد الإلكتروني">
     <input type="password" id="password" placeholder="كلمة المرور">
-    <button onclick="login()">تسجيل الدخول</button>
-    <p id="loginError" class="error"></p>
+    <button class="btn" onclick="login()">تسجيل الدخول</button>
+    <div class="error" id="loginError"></div>
   </div>
 
-  <!-- لوحة التحكم -->
-  <div id="adminPanel" class="hidden">
+  <!-- لوحة الإدارة -->
+  <div class="box hidden" id="adminPanel">
+    <h2>⚙️ إعدادات المتجر</h2>
+    <label>رابط واتساب:</label>
+    <input type="text" id="whatsappLink" placeholder="wa.me/966...">
+    <label>رابط تليجرام:</label>
+    <input type="text" id="telegramLink" placeholder="t.me/username">
+    <button class="btn" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+  </div>
 
-    <!-- اختيار العملة -->
-    <div class="currency-box">
-      <label for="currencySelect">💱 اختر العملة:</label>
-      <select id="currencySelect" onchange="changeCurrency()">
-        <option value="$">$ دولار</option>
-        <option value="د.ع">د.ع دينار عراقي</option>
-      </select>
-    </div>
-
-    <h2 style="clear: both;">📦 لوحة إدارة المنتجات</h2>
-
+  <div class="box hidden" id="productBox">
+    <h2>📦 إدارة المنتجات</h2>
     <form id="productForm">
       <input type="hidden" id="editIndex" value="-1">
-
-      <label>اسم المنتج:</label>
-      <input type="text" id="name" required>
-
-      <label>السعر:</label>
-      <input type="text" id="price" required>
-
-      <label>الكمية المتوفرة:</label>
-      <input type="number" id="quantity" required>
-
-      <label>رابط صورة المنتج:</label>
-      <input type="url" id="image" required>
-
-      <button type="submit">🚀 حفظ المنتج</button>
+      <input type="text" id="name" placeholder="اسم المنتج" required>
+      <input type="text" id="price" placeholder="السعر" required>
+      <input type="number" id="quantity" placeholder="الكمية المتوفرة" required>
+      <input type="url" id="image" placeholder="رابط صورة المنتج" required>
+      <button type="submit" class="btn">🚀 حفظ المنتج</button>
     </form>
-
-    <button onclick="clearAllProducts()" class="clear-btn">🗑️ حذف جميع المنتجات</button>
-
-    <div class="preview" id="preview">
-      <h3>📋 المنتجات الحالية:</h3>
+    <div class="center">
+      <button class="btn btn-danger" onclick="clearAllProducts()">🗑️ حذف جميع المنتجات</button>
     </div>
+    <div id="preview"></div>
   </div>
 
   <script>
@@ -149,27 +149,30 @@
     function login() {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      const errorBox = document.getElementById('loginError');
+      const error = document.getElementById('loginError');
 
       if (email === correctEmail && password === correctPassword) {
-        document.getElementById('loginBox').style.display = 'none';
+        document.getElementById('loginBox').classList.add('hidden');
         document.getElementById('adminPanel').classList.remove('hidden');
+        document.getElementById('productBox').classList.remove('hidden');
         renderProducts();
-        setCurrencyUI();
+        loadSettings();
       } else {
-        errorBox.textContent = "❌ الإيميل أو كلمة المرور غير صحيحة!";
+        error.textContent = "❌ البريد أو كلمة المرور غير صحيحة.";
       }
     }
 
-    function setCurrencyUI() {
-      const currency = localStorage.getItem('currency') || '$';
-      document.getElementById('currencySelect').value = currency;
+    function saveSettings() {
+      const whatsapp = document.getElementById('whatsappLink').value;
+      const telegram = document.getElementById('telegramLink').value;
+      localStorage.setItem('whatsappLink', whatsapp);
+      localStorage.setItem('telegramLink', telegram);
+      alert("✅ تم حفظ إعدادات التواصل");
     }
 
-    function changeCurrency() {
-      const currency = document.getElementById('currencySelect').value;
-      localStorage.setItem('currency', currency);
-      renderProducts();
+    function loadSettings() {
+      document.getElementById('whatsappLink').value = localStorage.getItem('whatsappLink') || '';
+      document.getElementById('telegramLink').value = localStorage.getItem('telegramLink') || '';
     }
 
     const form = document.getElementById('productForm');
@@ -177,15 +180,13 @@
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-
-      const name = document.getElementById('name').value;
-      const price = document.getElementById('price').value;
-      const image = document.getElementById('image').value;
-      const quantity = document.getElementById('quantity').value;
+      const product = {
+        name: document.getElementById('name').value,
+        price: document.getElementById('price').value,
+        quantity: document.getElementById('quantity').value,
+        image: document.getElementById('image').value
+      };
       const editIndex = parseInt(document.getElementById('editIndex').value);
-
-      const product = { name, price, image, quantity };
-
       let products = JSON.parse(localStorage.getItem('products')) || [];
 
       if (editIndex >= 0) {
@@ -201,23 +202,20 @@
     });
 
     function renderProducts() {
-      const products = JSON.parse(localStorage.getItem('products')) || [];
-      const currency = localStorage.getItem('currency') || '$';
-
-      const list = products.map((p, index) => `
+      let products = JSON.parse(localStorage.getItem('products')) || [];
+      let currency = localStorage.getItem('currency') || '$';
+      preview.innerHTML = products.map((p, i) => `
         <div class="product-item">
           <img src="${p.image}" alt="${p.name}">
           <div class="product-info">
             <strong>${p.name}</strong><br>
-            <small>${p.price} ${currency}</small><br>
+            <span>${p.price} ${currency}</span><br>
             <small>الكمية: ${p.quantity}</small>
           </div>
-          <button class="edit-btn" onclick="editProduct(${index})">✏️ تعديل</button>
-          <button class="delete-btn" onclick="deleteProduct(${index})">🗑️ حذف</button>
+          <button class="btn btn-warning" onclick="editProduct(${i})">✏️ تعديل</button>
+          <button class="btn btn-danger" onclick="deleteProduct(${i})">🗑️ حذف</button>
         </div>
-      `).join("");
-
-      preview.innerHTML = `<h3>📋 المنتجات الحالية:</h3>${list}`;
+      `).join('');
     }
 
     function deleteProduct(index) {
@@ -227,22 +225,21 @@
       renderProducts();
     }
 
-    function editProduct(index) {
-      const products = JSON.parse(localStorage.getItem('products')) || [];
-      const product = products[index];
+    function clearAllProducts() {
+      if (confirm("هل أنت متأكد من حذف جميع المنتجات؟")) {
+        localStorage.removeItem('products');
+        renderProducts();
+      }
+    }
 
+    function editProduct(index) {
+      let products = JSON.parse(localStorage.getItem('products')) || [];
+      let product = products[index];
       document.getElementById('name').value = product.name;
       document.getElementById('price').value = product.price;
       document.getElementById('quantity').value = product.quantity;
       document.getElementById('image').value = product.image;
       document.getElementById('editIndex').value = index;
-    }
-
-    function clearAllProducts() {
-      if (confirm("هل أنت متأكد من حذف جميع المنتجات؟ 😱")) {
-        localStorage.removeItem('products');
-        renderProducts();
-      }
     }
   </script>
 
