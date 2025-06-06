@@ -132,6 +132,8 @@
     }
 
     const products = JSON.parse(localStorage.getItem('products')) || [];
+    const currency = localStorage.getItem('currency') || '$';
+
     const productList = document.getElementById('productList');
 
     products.forEach(product => {
@@ -140,7 +142,7 @@
       div.innerHTML = `
         <img src="${product.image}" alt="صورة المنتج" />
         <div class="product-name">${product.name}</div>
-        <div class="price">${product.price} ريال</div>
+        <div class="price">${product.price} ${currency}</div>
         <div class="quantity">الكمية المتوفرة: ${product.quantity}</div>
         <button class="buy-btn" onclick="showPopup()">اشترِ الآن</button>
       `;
