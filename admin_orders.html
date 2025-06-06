@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>لوحة الطلبات</title>
+  <style>
+    body{background:#f4f4f4;color:#222;font-family:Segoe UI;padding:20px; margin:0;}
+    h2{text-align:center;}
+    .order{background:white;border-radius:8px;padding:15px;margin-bottom:15px;box-shadow:0 2px 4px rgba(0,0,0,0.1);}
+    .order-header{display:flex;justify-content:space-between;align-items:center;}
+    .order-body{margin-top:10px;}
+    .del-btn{background:#dc3545;color:white;padding:6px 12px;border:none;border-radius:6px;cursor:pointer;}
+  </style>
+</head>
+<body>
+
+  <h2>📦 الطلبات المرسلة</h2>
+  <div id="ordersList"></div>
+
+  <script>
+    function renderOrders(){
+      const orders = JSON.parse(localStorage.getItem('orders'))||[];
+      const container = document.getElementById('ordersList');
+      container.innerHTML = orders.map((o,i)=>
+        `<div class="order">
+          <div class="order-header">
+            <strong>${o.name} - ${o.phone}</strong>
+            <button class="del-btn" data-i="${i}">حذف</button>
+          </div>
+          <div class="order-body">
+            <p><b>المنتج:</b> ${o.items.map(x=>x.name).join(', ')}</p>
+            <p><b>الدولة:</b> ${o.country} / <b>المدينة:</b> ${o.city}</p>
+            <p><b>العنوان:</b> ${o.address}</p>
+            ${o.email? `<p><b>البريد:</b> ${o.email}</p>` : ''}
+            ${o.notes? `<p><b>ملاحظات:</b> ${o.notes}</p>` : ''}
+            <p><small>${new Date(o.date).toLocaleString()}</small></p>
+          </div>
+        </div>`
+      ).join('');
+      container.querySelectorAll('.del-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=> {
+          const idx = +btn.dataset.i;
+          orders.splice(idx,1);
+          localStorage.setItem('orders', JSON.stringify(orders));
+          renderOrders();
+        });
+      });
+    }
+
+    renderOrders();
+  </script>
+
+</body>
+</html>
