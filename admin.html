@@ -110,9 +110,8 @@
     <div class="currency-box">
       <label for="currencySelect">💱 اختر العملة:</label>
       <select id="currencySelect" onchange="changeCurrency()">
-        <option value="ريال">ريال</option>
         <option value="$">$ دولار</option>
-        <option value="€">€ يورو</option>
+        <option value="د.ع">د.ع دينار عراقي</option>
       </select>
     </div>
 
@@ -163,7 +162,7 @@
     }
 
     function setCurrencyUI() {
-      const currency = localStorage.getItem('currency') || 'ريال';
+      const currency = localStorage.getItem('currency') || '$';
       document.getElementById('currencySelect').value = currency;
     }
 
@@ -203,7 +202,7 @@
 
     function renderProducts() {
       const products = JSON.parse(localStorage.getItem('products')) || [];
-      const currency = localStorage.getItem('currency') || 'ريال';
+      const currency = localStorage.getItem('currency') || '$';
 
       const list = products.map((p, index) => `
         <div class="product-item">
