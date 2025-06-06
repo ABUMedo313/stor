@@ -1,356 +1,189 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>متجر الأحلام</title>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" type="image/png">
-  <style>
-    :root {
-      --bg-dark: #181818; --text-dark: #eee; --card-dark: #222; --btn-dark: #2a5298;
-      --bg-light: #f4f4f4; --text-light: #222; --card-light: #fff; --btn-light: #007bff;
-    }
-
-    body[data-theme="dark"] {
-      background: var(--bg-dark);
-      color: var(--text-dark);
-    }
-
-    body[data-theme="light"] {
-      background: var(--bg-light);
-      color: var(--text-light);
-    }
-
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 15px 20px;
-      background-color: #111;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
-    .header .logo-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .header .logo-title img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 24px;
-      color: white;
-    }
-
-    .header .menu-icon,
-    .header .cart-icon {
-      font-size: 24px;
-      cursor: pointer;
-      margin-left: 15px;
-      color: white;
-    }
-
-    .settings-panel {
-      position: fixed;
-      top: 70px;
-      right: 20px;
-      background: #333;
-      color: #eee;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-      display: none;
-      z-index: 200;
-    }
-
-    .settings-panel select,
-    .settings-panel button {
-      width: 100%;
-      margin: 8px 0;
-      padding: 8px;
-      border-radius: 5px;
-      border: 1px solid #444;
-      background: #444;
-      color: #eee;
-    }
-
-    .products {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 20px;
-      gap: 20px;
-    }
-
-    .product {
-      background: #222;
-      border-radius: 12px;
-      padding: 15px;
-      width: 260px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-      text-align: center;
-    }
-
-    .product img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-
-    .product-name {
-      margin: 10px 0;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .price {
-      color: #4caf50;
-      margin-bottom: 6px;
-      font-size: 16px;
-    }
-
-    .quantity {
-      font-size: 14px;
-      color: #ccc;
-      margin-bottom: 12px;
-    }
-
-    .add-btn {
-      background: linear-gradient(45deg, #1e3c72, #2a5298);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    .add-btn:hover {
-      opacity: 0.9;
-    }
-
-    .overlay,
-    .popup,
-    .cart-panel {
-      position: fixed;
-      display: none;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-    }
-
-    .popup,
-    .cart-content {
-      background: #333;
-      color: #eee;
-      padding: 30px;
-      border-radius: 8px;
-      text-align: center;
-      max-width: 90%;
-      width: 350px;
-    }
-
-    .popup .link-buttons,
-    .cart-content .link-buttons {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .popup a,
-    .cart-content a {
-      display: inline-block;
-      padding: 12px 20px;
-      border-radius: 8px;
-      background: #25D366;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      min-width: 120px;
-      text-align: center;
-    }
-
-    .popup a.telegram,
-    .cart-content a.telegram {
-      background: #0088cc;
-    }
-
-    .cart-item {
-      background: #444;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 6px;
-      text-align: left;
-    }
-
-    .close-btn {
-      margin-top: 15px;
-      padding: 8px 16px;
-      background: #555;
-      border: none;
-      border-radius: 4px;
-      color: #eee;
-      cursor: pointer;
-    }
-  </style>
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>متجر الأحلام</title>
+<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3081/3081559.png">
+<style>
+:root {
+  --bg-dark:#181818;--text-dark:#eee;--card-dark:#222;
+  --bg-light:#f4f4f4;--text-light:#222;--card-light:#fff;
+}
+body[data-theme="dark"]{background:var(--bg-dark);color:var(--text-dark);}
+body[data-theme="light"]{background:var(--bg-light);color:var(--text-light);}
+.header{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;background:#111;position:sticky;top:0;z-index:1000;}
+.logo-title{display:flex;align-items:center;gap:10px;}
+.logo-title img{width:40px;height:40px;border-radius:50%;object-fit:cover;}
+.header h1{margin:0;font-size:24px;color:white;}
+.header span{font-size:24px;cursor:pointer;color:white;margin-left:15px;}
+.settings-panel{position:fixed;top:70px;right:20px;background:#333;color:#eee;padding:20px;border-radius:8px;display:none;z-index:200;}
+.settings-panel select, .settings-panel button{width:100%;margin:8px 0;padding:8px;border-radius:5px;border:1px solid #444;background:#444;color:#eee;}
+.products{display:flex;flex-wrap:wrap;justify-content:center;padding:20px;gap:20px;}
+.product{background:var(--card-dark);border-radius:12px;padding:15px;width:260px;box-shadow:0 4px 8px rgba(0,0,0,0.4);text-align:center;}
+.product img{width:100%;height:180px;object-fit:cover;border-radius:8px;}
+.product-name{margin:10px 0;font-size:18px;font-weight:bold;}
+.price{color:#4caf50;margin-bottom:6px;font-size:16px;}
+.quantity{font-size:14px;color:#ccc;margin-bottom:12px;}
+.add-btn{background:linear-gradient(45deg,#1e3c72,#2a5298);color:#fff;border:none;padding:10px 20px;border-radius:20px;cursor:pointer;font-weight:bold;transition:0.3s;}
+.add-btn:hover{opacity:0.9;}
+.overlay,.popup,.cart-panel{position:fixed;display:none;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:100;}
+.popup,.cart-content{background:#333;color:#eee;padding:30px;border-radius:8px;text-align:center;max-width:90%;width:350px;}
+.link-buttons{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;}
+.popup a,.cart-content a{display:inline-block;padding:12px 20px;border-radius:8px;background:#25D366;color:white;text-decoration:none;font-weight:bold;min-width:120px;text-align:center;}
+.popup a.telegram,.cart-content a.telegram{background:#0088cc;}
+.cart-item{background:#444;padding:10px;margin:8px 0;border-radius:6px;text-align:left;}
+.cart-item button{float:right;background:#c00;border:none;color:white;border-radius:4px;padding:4px 8px;cursor:pointer;}
+.close-btn{margin-top:15px;padding:8px 16px;background:#555;border:none;border-radius:4px;color:#eee;cursor:pointer;}
+</style>
 </head>
 <body data-theme="dark">
 
-  <div class="header">
-    <div class="logo-title">
-      <img id="storeLogo" src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="Logo">
-      <h1 id="storeTitle">متجر الأحلام</h1>
-    </div>
-    <div>
-      <span class="cart-icon" onclick="openCart()">🛒 (<span id="cartCount">0</span>)</span>
-      <span class="menu-icon" onclick="toggleSettings()">☰</span>
-    </div>
+<div class="header">
+  <div class="logo-title">
+    <img id="storeLogo" src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="Logo">
+    <h1 id="storeTitle">متجر الأحلام</h1>
   </div>
-
-  <div class="settings-panel" id="settingsPanel">
-    <select id="themeSelect" onchange="setTheme()">
-      <option value="dark">ثيم داكن</option>
-      <option value="light">ثيم فاتح</option>
-    </select>
-    <select id="langSelect" onchange="setLang()">
-      <option value="ar">العربي</option>
-      <option value="en">English</option>
-      <option value="ku">Kurdî</option>
-    </select>
-    <button onclick="contactCart()">تواصل (السلة)</button>
+  <div>
+    <span class="cart-icon" onclick="openCart()">🛒 (<span id="cartCount">0</span>)</span>
+    <span class="menu-icon" onclick="toggleSettings()">☰</span>
   </div>
+</div>
 
-  <div class="products" id="productList"></div>
+<div class="settings-panel" id="settingsPanel">
+  <select id="themeSelect" onchange="setTheme()">
+    <option value="dark">ثيم داكن</option>
+    <option value="light">ثيم فاتح</option>
+  </select>
+  <select id="langSelect" onchange="setLang()">
+    <option value="ar">العربي</option>
+    <option value="en">English</option>
+    <option value="ku">Kurdî</option>
+  </select>
+  <button onclick="contactCart()">تواصل (السلة)</button>
+</div>
 
-  <div class="overlay" id="overlay" onclick="closeAll()"></div>
+<div class="products" id="productList"></div>
 
-  <!-- popup التواصل -->
-  <div class="popup" id="popup">
-    <p id="popupMsg">اختر طريقة التواصل معنا:</p>
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<div class="popup" id="popup">
+  <p id="popupMsg">اختر طريقة التواصل معنا:</p>
+  <div class="link-buttons">
+    <a id="waLink" href="#" target="_blank">واتساب 📱</a>
+    <a id="tgLink" class="telegram" href="#" target="_blank">تليجرام 💬</a>
+  </div>
+  <button class="close-btn" onclick="closeAll()">إغلاق</button>
+</div>
+
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-content">
+    <h3>🛒 سلة مشترياتك</h3>
+    <div id="cartItems"></div>
     <div class="link-buttons">
-      <a id="waLink" href="#" target="_blank">واتساب 📱</a>
-      <a id="tgLink" class="telegram" href="#" target="_blank">تليجرام 💬</a>
+      <a id="waLinkCart" href="#" target="_blank">واتساب</a>
+      <a id="tgLinkCart" class="telegram" href="#" target="_blank">تليجرام</a>
     </div>
     <button class="close-btn" onclick="closeAll()">إغلاق</button>
   </div>
+</div>
 
-  <!-- سلة الشراء -->
-  <div class="cart-panel" id="cartPanel">
-    <div class="cart-content">
-      <h3>🛒 سلة مشترياتك</h3>
-      <div id="cartItems"></div>
-      <div class="link-buttons">
-        <a id="waLinkCart" href="#" target="_blank">واتساب</a>
-        <a id="tgLinkCart" class="telegram" href="#" target="_blank">تليجرام</a>
-      </div>
-      <button class="close-btn" onclick="closeAll()">إغلاق</button>
-    </div>
-  </div>
+<script>
+const products = JSON.parse(localStorage.getItem('products'))||[];
+let cart = JSON.parse(localStorage.getItem('cart'))||[];
+let currency = localStorage.getItem('currency')||'$';
+let theme = localStorage.getItem('theme')||'dark';
+let lang = localStorage.getItem('lang')||'ar';
+const waLinkAdmin = localStorage.getItem('whatsappLink')||'wa.me/966XXXXXXXXX';
+const tgLinkAdmin = localStorage.getItem('telegramLink')||'t.me/username';
 
-  <script>
-    const products = JSON.parse(localStorage.getItem('products')) || [];
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    let currency = localStorage.getItem('currency') || '$';
-    let theme = localStorage.getItem('theme') || 'dark';
-    let lang = localStorage.getItem('lang') || 'ar';
+document.body.setAttribute('data-theme', theme);
+document.getElementById('themeSelect').value=theme;
+document.getElementById('langSelect').value=lang;
 
-    const waLinkAdmin = localStorage.getItem('whatsappLink') || 'wa.me/966XXXXXXXXX';
-    const tgLinkAdmin = localStorage.getItem('telegramLink') || 't.me/username';
+const texts = {
+  ar: {qty:"الكمية", add:"أضف إلى السلة", cart:"سلة مشترياتك", empty:"السلة فارغة.", contactCart:"تواصل (السلة)", close:"إغلاق", choose:"اختر طريقة التواصل معنا:"},
+  en: {qty:"Quantity", add:"Add to Cart", cart:"Your Cart", empty:"Cart is empty.", contactCart:"Contact (Cart)", close:"Close", choose:"Choose contact method:"},
+  ku: {qty:"بڕ", add:"زیادکردن بە سەلە", cart:"کۆمەڵە باڵەوە", empty:"سەلە بەتاڵە.", contactCart:"پەیوەندی (سەلە)", close:"داخەوە", choose:"ڕێکبەندی پەیوەندیدان:"},
+};
 
-    document.body.setAttribute('data-theme', theme);
-    document.getElementById('themeSelect').value = theme;
-    document.getElementById('langSelect').value = lang;
+function toggleSettings(){let p=document.getElementById('settingsPanel');p.style.display=p.style.display==='block'?'none':'block';}
+function setTheme(){theme=document.getElementById('themeSelect').value;localStorage.setItem('theme',theme);document.body.setAttribute('data-theme',theme);}
+function setLang(){lang=document.getElementById('langSelect').value;localStorage.setItem('lang',lang);updateTexts();renderProducts();}
+function updateTexts(){
+  const t=texts[lang];
+  document.getElementById('popupMsg').textContent=t.choose;
+  document.querySelector('.settings-panel button').textContent=t.contactCart;
+  document.querySelector('#cartPanel h3').textContent=`🛒 ${t.cart}`;
+}
 
-    function toggleSettings() {
-      const panel = document.getElementById('settingsPanel');
-      panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-    }
+function renderProducts(){
+  const t=texts[lang];
+  document.getElementById('productList').innerHTML = products.map((p,i)=>
+    `<div class="product">
+      <img src="${p.image}" alt="${p.name}">
+      <div class="product-name">${p.name}</div>
+      <div class="price">${p.price} ${currency}</div>
+      <div class="quantity">${t.qty}: ${p.quantity}</div>
+      <button class="add-btn" onclick="addToCart(${i})">${t.add}</button>
+    </div>`).join('');
+  document.getElementById('cartCount').textContent=cart.length;
+}
 
-    function setTheme() {
-      theme = document.getElementById('themeSelect').value;
-      localStorage.setItem('theme', theme);
-      document.body.setAttribute('data-theme', theme);
-    }
+function addToCart(i){
+  cart.push(products[i]);
+  localStorage.setItem('cart',JSON.stringify(cart));
+  document.getElementById('cartCount').textContent = cart.length;
+}
 
-    function setLang() {
-      lang = document.getElementById('langSelect').value;
-      localStorage.setItem('lang', lang);
-    }
+function openCart(){
+  renderCart();
+  document.getElementById('overlay').style.display='flex';
+  document.getElementById('cartPanel').style.display='flex';
+}
 
-    function renderProducts() {
-      document.getElementById('productList').innerHTML = products.map((p, i) =>
-        `<div class="product">
-          <img src="${p.image}" alt="${p.name}">
-          <div class="product-name">${p.name}</div>
-          <div class="price">${p.price} ${currency}</div>
-          <div class="quantity">الكمية: ${p.quantity}</div>
-          <button class="add-btn" onclick="addToCart(${i})">أضف إلى السلة</button>
-        </div>`
-      ).join('');
-      document.getElementById('cartCount').textContent = cart.length;
-    }
+function renderCart(){
+  const t=texts[lang];
+  if(cart.length===0) document.getElementById('cartItems').innerHTML = `<p>${t.empty}</p>`;
+  else document.getElementById('cartItems').innerHTML = cart.map((p,i)=>
+    `<div class="cart-item">
+      ${p.name} • ${p.price} ${currency}<br><small>${t.qty}: ${p.quantity}</small>
+      <button onclick="removeFromCart(${i})">✖️</button>
+    </div>`).join('');
+  const msg = cart.map(p=>`${p.name} (${p.quantity}) - ${p.price} ${currency}`).join('%0A');
+  document.getElementById('waLinkCart').href=`https://${waLinkAdmin}?text=${encodeURIComponent(msg)}`;
+  document.getElementById('tgLinkCart').href=`https://${tgLinkAdmin}`;
+}
 
-    function addToCart(i) {
-      cart.push(products[i]);
-      localStorage.setItem('cart', JSON.stringify(cart));
-      document.getElementById('cartCount').textContent = cart.length;
-    }
+function removeFromCart(i){
+  cart.splice(i,1);
+  localStorage.setItem('cart',JSON.stringify(cart));
+  renderCart();
+  document.getElementById('cartCount').textContent = cart.length;
+}
 
-    function openCart() {
-      renderCart();
-      document.getElementById('overlay').style.display = 'flex';
-      document.getElementById('cartPanel').style.display = 'flex';
-    }
+function contactCart(){
+  renderCart();
+  togglePopup();
+}
 
-    function renderCart() {
-      let html = cart.map((p, i) => `
-        <div class="cart-item">
-          ${p.name} • ${p.price} ${currency}<br>
-          <small>الكمية: ${p.quantity}</small>
-        </div>`).join('');
-      document.getElementById('cartItems').innerHTML = html || '<p>السلة فارغة.</p>';
+function togglePopup(){
+  const o= document.getElementById('overlay'),
+        p= document.getElementById('popup');
+  o.style.display=o.style.display==='flex'?'none':'flex';
+  p.style.display=p.style.display==='flex'?'none':'flex';
+  const msg=cart.map(p=>`${p.name} (${p.quantity}) - ${p.price} ${currency}`).join('%0A');
+  document.getElementById('waLink').href=`https://${waLinkAdmin}?text=${encodeURIComponent(msg)}`;
+  document.getElementById('tgLink').href=`https://${tgLinkAdmin}`;
+}
 
-      let msg = cart.map(p => `${p.name} (${p.quantity}) - ${p.price} ${currency}`).join('%0A');
-      document.getElementById('waLinkCart').href = `https://${waLinkAdmin}?text=${encodeURIComponent(msg)}`;
-      document.getElementById('tgLinkCart').href = `https://${tgLinkAdmin}`;
-    }
+function closeAll(){
+  document.getElementById('overlay').style.display='none';
+  document.getElementById('popup').style.display='none';
+  document.getElementById('cartPanel').style.display='none';
+  document.getElementById('settingsPanel').style.display='none';
+}
 
-    function contactCart() {
-      renderCart();
-      document.getElementById('overlay').style.display = 'flex';
-      document.getElementById('popup').style.display = 'flex';
+updateTexts();
+renderProducts();
+</script>
 
-      let msg = cart.map(p => `${p.name} (${p.quantity}) - ${p.price} ${currency}`).join('%0A');
-      document.getElementById('waLink').href = `https://${waLinkAdmin}?text=${encodeURIComponent(msg)}`;
-      document.getElementById('tgLink').href = `https://${tgLinkAdmin}`;
-    }
-
-    function closeAll() {
-      document.getElementById('overlay').style.display = 'none';
-      document.getElementById('popup').style.display = 'none';
-      document.getElementById('cartPanel').style.display = 'none';
-      document.getElementById('settingsPanel').style.display = 'none';
-    }
-
-    renderProducts();
-  </script>
 </body>
 </html>
