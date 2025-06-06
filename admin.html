@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>لوحة رفع المنتجات</title>
+  <title>لوحة رفع وتعديل المنتجات</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" type="image/png">
   <style>
     body {
       font-family: 'Tahoma', sans-serif;
@@ -20,6 +21,7 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       max-width: 500px;
+      margin-bottom: 20px;
     }
 
     input, textarea {
@@ -70,6 +72,11 @@
       background-color: #dc3545;
     }
 
+    .edit-btn {
+      background-color: #ffc107;
+      color: black;
+    }
+
     .clear-btn {
       background-color: #000;
     }
@@ -77,19 +84,24 @@
 </head>
 <body>
 
-  <h2>📦 لوحة رفع المنتجات</h2>
+  <h2>📦 لوحة إدارة المنتجات</h2>
 
   <form id="productForm">
+    <input type="hidden" id="editIndex" value="-1">
+    
     <label>اسم المنتج:</label>
     <input type="text" id="name" required>
 
     <label>السعر:</label>
     <input type="text" id="price" required>
 
-    <label>رابط صورة المنتج (من imgur أو أي موقع):</label>
+    <label>الكمية المتوفرة:</label>
+    <input type="number" id="quantity" required>
+
+    <label>رابط صورة المنتج:</label>
     <input type="url" id="image" required>
 
-    <button type="submit">🚀 أضف المنتج</button>
+    <button type="submit">🚀 حفظ المنتج</button>
   </form>
 
   <button onclick="clearAllProducts()" class="clear-btn">🗑️ حذف جميع المنتجات</button>
@@ -108,14 +120,22 @@
       const name = document.getElementById('name').value;
       const price = document.getElementById('price').value;
       const image = document.getElementById('image').value;
+      const quantity = document.getElementById('quantity').value;
+      const editIndex = parseInt(document.getElementById('editIndex').value);
 
-      const product = { name, price, image };
+      const product = { name, price, image, quantity };
 
       let products = JSON.parse(localStorage.getItem('products')) || [];
-      products.push(product);
-      localStorage.setItem('products', JSON.stringify(products));
 
+      if (editIndex >= 0) {
+        products[editIndex] = product;
+      } else {
+        products.push(product);
+      }
+
+      localStorage.setItem('products', JSON.stringify(products));
       form.reset();
+      document.getElementById('editIndex').value = -1;
       renderProducts();
     });
 
@@ -126,8 +146,10 @@
           <img src="${p.image}" alt="${p.name}">
           <div class="product-info">
             <strong>${p.name}</strong><br>
-            <small>${p.price} ريال</small>
+            <small>${p.price} ريال</small><br>
+            <small>الكمية: ${p.quantity}</small>
           </div>
+          <button class="edit-btn" onclick="editProduct(${index})">✏️ تعديل</button>
           <button class="delete-btn" onclick="deleteProduct(${index})">🗑️ حذف</button>
         </div>
       `).join("");
@@ -142,6 +164,17 @@
       renderProducts();
     }
 
+    function editProduct(index) {
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      const product = products[index];
+
+      document.getElementById('name').value = product.name;
+      document.getElementById('price').value = product.price;
+      document.getElementById('quantity').value = product.quantity;
+      document.getElementById('image').value = product.image;
+      document.getElementById('editIndex').value = index;
+    }
+
     function clearAllProducts() {
       if (confirm("هل أنت متأكد من حذف جميع المنتجات؟ 😱")) {
         localStorage.removeItem('products');
@@ -149,7 +182,6 @@
       }
     }
 
-    // عند تحميل الصفحة، نعرض المنتجات مباشرة
     renderProducts();
   </script>
 
