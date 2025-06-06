@@ -24,13 +24,14 @@
       margin: 0;
       font-size: 24px;
     }
-    .header .menu-icon {
+    .menu-icon {
       font-size: 24px;
       cursor: pointer;
     }
     .products {
       display: flex;
-      overflow-x: auto;
+      flex-wrap: wrap;
+      justify-content: center;
       padding: 20px;
       gap: 20px;
     }
@@ -39,10 +40,8 @@
       border-radius: 12px;
       padding: 15px;
       width: 260px;
-      flex: 0 0 auto;
       box-shadow: 0 4px 8px rgba(0,0,0,0.4);
       text-align: center;
-      position: relative;
     }
     .product img {
       width: 100%;
@@ -65,52 +64,44 @@
       margin-bottom: 12px;
     }
     .buy-btn {
-      background-color: #ff9800;
+      background: linear-gradient(45deg, #1e3c72, #2a5298);
+      color: white;
       border: none;
-      color: #111;
       padding: 10px 20px;
       border-radius: 20px;
       cursor: pointer;
       font-weight: bold;
-      transition: background-color 0.2s;
+      transition: 0.3s;
     }
     .buy-btn:hover {
-      background-color: #fb8c00;
+      opacity: 0.9;
     }
-    .overlay {
-      display: none; position: fixed;
+    .overlay, .popup {
+      position: fixed;
+      display: none;
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(0,0,0,0.7);
-      z-index: 99;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
     }
     .popup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       background: #333;
       color: #eee;
       padding: 30px;
       border-radius: 8px;
-      z-index: 100;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.5);
       text-align: center;
-    }
-    .popup p {
-      margin: 0 0 15px;
-      font-weight: bold;
+      z-index: 101;
     }
     .popup a {
       display: block;
-      margin: 8px 0;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 6px;
+      background-color: #25D366;
       color: #fff;
       text-decoration: none;
-      background-color: #25D366;
-      padding: 10px;
-      border-radius: 6px;
-      font-size: 16px;
     }
     .popup a.telegram {
       background-color: #0088cc;
@@ -120,46 +111,55 @@
 <body>
 
   <div class="header">
-    <h1>متجر الأحلام</h1>
-    <div class="menu-icon">☰</div>
+    <h1>🌟 متجر الأحلام 🌟</h1>
+    <div class="menu-icon" onclick="showPopup('')">📩</div>
   </div>
 
   <div class="products" id="productList"></div>
 
   <div class="overlay" id="overlay" onclick="hidePopup()"></div>
   <div class="popup" id="popup">
-    <p>اختر طريقة التواصل:</p>
-    <a href="https://wa.me/966XXXXXXXXX" target="_blank">واتساب 📱</a>
-    <a href="https://t.me/username" class="telegram" target="_blank">تليجرام 💬</a>
-    <button onclick="hidePopup()" style="margin-top:15px;padding:8px 16px;border:none;border-radius:4px;cursor:pointer;">إلغاء</button>
+    <p>اختر طريقة التواصل معنا:</p>
+    <a id="whatsappBtn" href="#" target="_blank">واتساب 📱</a>
+    <a id="tgBtn" class="telegram" href="#" target="_blank">تليجرام 💬</a>
+    <button onclick="hidePopup()" style="padding:10px 20px; margin-top:15px;">إلغاء</button>
   </div>
 
   <script>
-    function showPopup() {
-      document.getElementById('overlay').style.display = 'block';
+    const currency = localStorage.getItem('currency') || '$';
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    const productList = document.getElementById('productList');
+
+    // روابط التواصل من localStorage
+    const whatsappLink = localStorage.getItem('whatsappLink') || 'wa.me/966XXXXXXXXX';
+    const telegramLink = localStorage.getItem('telegramLink') || 't.me/username';
+
+    products.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'product';
+      card.innerHTML = `
+        <img src="${product.image}" alt="${product.name}">
+        <div class="product-name">${product.name}</div>
+        <div class="price">${product.price} ${currency}</div>
+        <div class="quantity">الكمية: ${product.quantity}</div>
+        <button class="buy-btn" onclick="showPopup('${product.name}')">اشترِ الآن</button>
+      `;
+      productList.appendChild(card);
+    });
+
+    function showPopup(productName = '') {
+      const fullWhatsAppLink = `https://${whatsappLink}?text=${encodeURIComponent('طلب المنتج: ' + productName)}`;
+      const fullTelegramLink = `https://${telegramLink}`;
+      document.getElementById('whatsappBtn').href = fullWhatsAppLink;
+      document.getElementById('tgBtn').href = fullTelegramLink;
+      document.getElementById('overlay').style.display = 'flex';
       document.getElementById('popup').style.display = 'block';
     }
+
     function hidePopup() {
       document.getElementById('overlay').style.display = 'none';
       document.getElementById('popup').style.display = 'none';
     }
-
-    const products = JSON.parse(localStorage.getItem('products')) || [];
-    const currency = localStorage.getItem('currency') || '$';
-    const productList = document.getElementById('productList');
-
-    products.forEach(prod => {
-      const card = document.createElement('div');
-      card.className = 'product';
-      card.innerHTML = `
-        <img src="${prod.image}" alt="${prod.name}">
-        <div class="product-name">${prod.name}</div>
-        <div class="price">${prod.price} ${currency}</div>
-        <div class="quantity">الكمية: ${prod.quantity}</div>
-        <button class="buy-btn" onclick="showPopup()">اشترِ الآن</button>
-      `;
-      productList.appendChild(card);
-    });
   </script>
 
 </body>
